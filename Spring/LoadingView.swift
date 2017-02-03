@@ -25,6 +25,7 @@ import UIKit
 public class LoadingView: UIView {
 
     @IBOutlet public weak var indicatorView: SpringView!
+    @IBOutlet weak var loadingImageView: UIImageView!
 
     override public func awakeFromNib() {
         let animation = CABasicAnimation()
@@ -61,6 +62,25 @@ public extension UIView {
         self.addSubview(loadingXibView)
 
         loadingXibView.alpha = 0
+        SpringAnimation.spring(duration: 0.7, animations: {
+            loadingXibView.alpha = 1
+        })
+    }
+    
+    public func showLoading(withImageName: String) {
+        
+        if self.viewWithTag(LoadingViewConstants.Tag) != nil {
+            // If loading view is already found in current view hierachy, do nothing
+            return
+        }
+        
+        let loadingXibView = LoadingView.designCodeLoadingView()
+        loadingXibView.frame = self.bounds
+        loadingXibView.tag = LoadingViewConstants.Tag
+        self.addSubview(loadingXibView)
+        
+        loadingXibView.alpha = 0
+        (loadingXibView as? LoadingView)?.loadingImageView.image = UIImage(named: withImageName)
         SpringAnimation.spring(duration: 0.7, animations: {
             loadingXibView.alpha = 1
         })
